@@ -55,7 +55,7 @@ def main():
     webhook = os.environ.get("DISCORD_WEBHOOK_URL")
     if not webhook:
         sys.exit("Brak DISCORD_WEBHOOK_URL w .env")
-    feed = os.environ.get("FEED_URL", "https://www.wowhead.com/news/rss/classic")
+    feed = os.environ.get("FEED_URL", "https://www.wowhead.com/news/rss/all")
     keywords = [k.strip().lower() for k in os.environ.get("KEYWORDS", "forever").split(",") if k.strip()]
     interval = int(os.environ.get("INTERVAL_MINUTES", "0"))  # 0 = jednorazowo
 
