@@ -1,0 +1,39 @@
+name: wow-forever-news-bot
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wow-forever-news-bot
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wow-forever-news-bot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Wyślij nowe newsy
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.WOW_FOREVER_WEBHOOK }}
+        run: python bot.py
+      - name: Zapisz seen.json
+        run: |
+          if [ -n "$(git status --porcelain seen.json)" ]; then
+            git config user.name "discordinio-bot"
+            git config user.email "bot@users.noreply.github.com"
+            git add seen.json
+            git commit -m "wow-forever-news-bot: update seen"
+            git pull --rebase
+            git push
+          fi
